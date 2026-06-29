@@ -1,3 +1,6 @@
+import os
+from export_utils import export_conversation_to_txt
+
 import chainlit as cl
 
 @cl.password_auth_callback
@@ -18,6 +21,7 @@ from database import (
     update_conversation_title,
     get_conversations_by_user,
     get_messages_by_conversation,
+    get_conversation_title,
     save_feedback,
 )
 
@@ -42,7 +46,8 @@ async def start():
     conversations = get_conversations_by_user(user_id)
 
     actions = [
-        cl.Action(name="new_chat", payload={"conversation_id": conversation_id}, label="New Chat")
+        cl.Action(name="new_chat", payload={"conversation_id": conversation_id}, label="New Chat"),
+        cl.Action(name="export_conversation", payload={}, label="Export Current Conversation"),
     ]
 
     for convo in conversations[:5]:
@@ -141,4 +146,37 @@ async def on_feedback_negative(action: cl.Action):
 
     await cl.Message(
         content="Thanks for your feedback. Marked as not helpful."
+    ).send()
+
+
+@cl.action_callback("export_conversation")
+async def on_export_conversation(action: cl.Action):
+    conversation_id = cl.user_session.get("conversation_id")
+
+    if not conversation_id:
+        await cl.Message(content="No active conversation found to export.").send()
+        return
+
+    title = get_conversation_title(conversation_id)
+    messages = get_messages_by_conversation(conversation_id)
+
+    if not messages:
+        await cl.Message(content="No messages found in this conversation yet.").send()
+        return
+
+    file_path = export_conversation_to_txt(conversation_id, title, messages)
+    file_name = os.path.basename(file_path)
+
+    with open(file_path, "rb") as file:
+        file_content = file.read()
+
+    await cl.Message(
+        content="Your conversation export is ready. Download the file below.",
+        elements=[
+            cl.File(
+                name=file_name,
+                content=file_content,
+                mime="text/plain",
+            )
+        ],
     ).send()
