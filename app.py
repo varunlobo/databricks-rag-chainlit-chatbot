@@ -67,8 +67,8 @@ async def start():
 )
 
     await cl.Message(
-        content="# Halliburton PerfAI Assistant",
-        elements=[logo]
+        content="# Halliburton: PerfAI",
+        #elements=[logo]
     ).send()
 
 
