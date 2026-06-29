@@ -170,3 +170,20 @@ def get_conversation_title(conversation_id):
     conn.close()
 
     return row[0] if row else None
+
+def save_feedback(message_id, rating, comment=None):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO feedback (message_id, rating, comment)
+        VALUES (?, ?, ?)
+        """,
+        (message_id, rating, comment)
+    )
+
+    conn.commit()
+    feedback_id = cursor.lastrowid
+    conn.close()
+    return feedback_id

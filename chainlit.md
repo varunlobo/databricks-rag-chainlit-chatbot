@@ -1,14 +1,22 @@
-# Welcome to Chainlit! 🚀🤖
+# Databricks RAG Chatbot
 
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
+A Python-based AI chatbot built using Chainlit that connects to a Databricks Model Serving endpoint hosting a Retrieval-Augmented Generation (RAG) agent.
 
-## Useful Links 🔗
+## Features
 
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
+- Chainlit chat interface
+- Databricks Serving endpoint integration
+- SQLite conversation history (coming soon)
+- Multiple user conversations (coming soon)
+- User feedback (coming soon)
+- Export conversations (coming soon)
+- Mobile responsive UI
+- Dark / Light mode
 
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
+## Tech Stack
 
-## Welcome screen
+- Python
+- Chainlit
+- Databricks Model Serving
+- SQLite
 
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
