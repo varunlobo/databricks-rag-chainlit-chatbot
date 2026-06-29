@@ -35,10 +35,22 @@ def call_databricks_rag(user_question: str) -> str:
 
     data = response.json()
 
+    data = response.json()
+
     try:
-        return data["output"][0]["content"][0]["text"]
-    except Exception:
+        # Format returned by your Databricks endpoint
+        if "predictions" in data:
+            return data["predictions"][0]["response"]
+
+        # OpenAI-style format, kept as fallback
+        if "output" in data:
+            return data["output"][0]["content"][0]["text"]
+
+        # Generic fallback
         return str(data)
+
+    except Exception as e:
+        return f"Unable to parse Databricks response: {e}. Raw response: {data}"
     
 
 if __name__ == "__main__":
