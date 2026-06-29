@@ -56,7 +56,82 @@ def initialize_database():
     conn.commit()
     conn.close()
 
+def get_or_create_user(username, display_name=None):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT user_id FROM users WHERE username = ?",
+        (username,)
+    )
+    row = cursor.fetchone()
+
+    if row:
+        conn.close()
+        return row[0]
+
+    cursor.execute(
+        "INSERT INTO users (username, display_name) VALUES (?, ?)",
+        (username, display_name or username)
+    )
+
+    conn.commit()
+    user_id = cursor.lastrowid
+    conn.close()
+    return user_id
+
+
+def create_conversation(user_id, title):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO conversations (user_id, title) VALUES (?, ?)",
+        (user_id, title)
+    )
+
+    conn.commit()
+    conversation_id = cursor.lastrowid
+    conn.close()
+    return conversation_id
+
+
+def save_message(conversation_id, sender, message):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        INSERT INTO messages (conversation_id, sender, message)
+        VALUES (?, ?, ?)
+        """,
+        (conversation_id, sender, message)
+    )
+
+    cursor.execute(
+        """
+        UPDATE conversations
+        SET last_updated = CURRENT_TIMESTAMP
+        WHERE conversation_id = ?
+        """,
+        (conversation_id,)
+    )
+
+    conn.commit()
+    message_id = cursor.lastrowid
+    conn.close()
+    return message_id
+
+
 
 if __name__ == "__main__":
     initialize_database()
-    print("Database created successfully...")
+
+    user_id = get_or_create_user("varun", "Varun")
+    conversation_id = create_conversation(user_id, "Test conversation")
+    save_message(conversation_id, "user", "Hello")
+    save_message(conversation_id, "assistant", "Hello! How can I assist you today?")
+
+    print("Database test completed successfully.")
+    print("User ID:", user_id)
+    print("Conversation ID:", conversation_id)
