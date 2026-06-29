@@ -116,3 +116,19 @@ def get_messages_by_conversation(conversation_id):
     messages = cursor.fetchall()
     conn.close()
     return messages
+
+def update_conversation_title(conversation_id, title):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE conversations
+        SET title = ?, last_updated = CURRENT_TIMESTAMP
+        WHERE conversation_id = ?
+        """,
+        (title, conversation_id)
+    )
+
+    conn.commit()
+    conn.close()
