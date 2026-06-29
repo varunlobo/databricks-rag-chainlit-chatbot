@@ -60,6 +60,18 @@ async def start():
             )
         )
 
+    logo = cl.Image(
+    path="public/logo_light.png",
+    name="Halliburton Logo",
+    display="inline"
+)
+
+    await cl.Message(
+        content="# Halliburton PerfAI Assistant",
+        elements=[logo]
+    ).send()
+
+
     await cl.Message(
         content="Select a previous conversation or start a new chat:",
         actions=actions
