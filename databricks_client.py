@@ -10,9 +10,7 @@ def call_databricks_rag(user_question: str) -> str:
     url = os.getenv("DATABRICKS_ENDPOINT_URL")
     token = os.getenv("DATABRICKS_TOKEN")
 
-    print("URL loaded:", url)
-    print("Token loaded:", "YES" if token else "NO")
-    print("Token starts with:", token[:6] if token else "No token")
+    
 
     if not url or not token:
         return "Missing Databricks endpoint URL or token. Check your .env file."

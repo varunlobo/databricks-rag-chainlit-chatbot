@@ -6,6 +6,7 @@ from database import (
     get_or_create_user,
     create_conversation,
     save_message,
+    update_conversation_title,
 )
 
 
@@ -34,6 +35,14 @@ async def main(message: cl.Message):
     user_question = message.content
 
     save_message(conversation_id, "user", user_question)
+
+    message_count = cl.user_session.get("message_count") or 0
+
+    if message_count == 0:
+        title = user_question[:50]
+        update_conversation_title(conversation_id, title)
+
+    cl.user_session.set("message_count", message_count + 1)
 
     msg = cl.Message(content="Thinking...")
     await msg.send()

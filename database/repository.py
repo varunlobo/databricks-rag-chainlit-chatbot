@@ -132,3 +132,41 @@ def update_conversation_title(conversation_id, title):
 
     conn.commit()
     conn.close()
+
+
+def get_latest_conversation_by_user(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT conversation_id, title, created_at, last_updated
+        FROM conversations
+        WHERE user_id = ?
+        ORDER BY last_updated DESC
+        LIMIT 1
+        """,
+        (user_id,)
+    )
+
+    conversation = cursor.fetchone()
+    conn.close()
+    return conversation
+
+def get_conversation_title(conversation_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT title
+        FROM conversations
+        WHERE conversation_id = ?
+        """,
+        (conversation_id,)
+    )
+
+    row = cursor.fetchone()
+    conn.close()
+
+    return row[0] if row else None
