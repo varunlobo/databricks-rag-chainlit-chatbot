@@ -4,3 +4,26 @@
 > div.flex.justify-center.gap-2.md\:justify-start {
     display: none !important;
 }
+
+
+/* Control the right-side login image container */
+#root > div.grid.min-h-svh.lg\:grid-cols-2 
+> div.relative.hidden.bg-muted.lg\:block.overflow-hidden {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: white !important;
+}
+
+
+/* Resize the large right-side login image */
+#root > div.grid.min-h-svh.lg\:grid-cols-2 
+> div.relative.hidden.bg-muted.lg\:block.overflow-hidden 
+> img {
+    position: static !important;
+    width: 80% !important;
+    max-width: 520px !important;
+    height: auto !important;
+    max-height: 320px !important;
+    object-fit: contain !important;
+}
